@@ -1,0 +1,15 @@
+{
+  "name": "chusu-note-frontend",
+  "version": "1.0.0",
+  "description": "Frontend pour CHUSU NOTE",
+  "scripts": {
+    "dev": "live-server --port=8080 --open=index.html",
+    "start": "live-server --port=8080 --open=index.html"
+  },
+  "keywords": ["html", "css", "javascript", "frontend"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "live-server": "^1.2.2"
+  }
+}
