@@ -43,13 +43,14 @@ const fruitRoutes = require('../backend/routes/fruits');
 const reminderRoutes = require('../backend/routes/reminders');
 const noteRoutes = require('../backend/routes/notes');
 
-app.use('/api/auth', authRoutes);
-app.use('/api/fruits', fruitRoutes);
-app.use('/api/reminders', reminderRoutes);
-app.use('/api/notes', noteRoutes);
+// Les routes doivent correspondre au path après /api/
+app.use('/auth', authRoutes);
+app.use('/fruits', fruitRoutes);
+app.use('/reminders', reminderRoutes);
+app.use('/notes', noteRoutes);
 
 // Route de bienvenue
-app.get('/api', (req, res) => {
+app.get('/', (req, res) => {
     res.json({ 
         message: '🍊 Bienvenue sur l\'API CHUSU NOTE',
         version: '1.0.0',
