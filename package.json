@@ -4,6 +4,7 @@
   "description": "CHUSU NOTE - Application de gestion de notes et rappels",
   "scripts": {
     "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "setup:db": "cd backend && node setup-db.js",
     "dev:backend": "cd backend && npm run dev",
     "dev:frontend": "cd frontend && npm run dev",
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",

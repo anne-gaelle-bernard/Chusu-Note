@@ -74,9 +74,13 @@ Puis ouvrez `http://localhost:8080` dans votre navigateur.
 
 ## 🔧 Configuration Backend
 
+### 🗄️ Configuration MongoDB
+
+**Important:** Le nom de la base de données est `chusu-note` (avec tiret, pas underscore)
+
 Fichier `backend/.env` :
 ```env
-MONGODB_URI=mongodb://localhost:27017/chusu_note
+MONGODB_URI=mongodb://localhost:27017/chusu-note
 JWT_SECRET=votre_secret_jwt_super_securise
 PORT=3000
 ```

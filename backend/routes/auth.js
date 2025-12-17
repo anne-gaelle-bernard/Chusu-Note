@@ -9,6 +9,25 @@ router.post('/register', async (req, res) => {
     try {
         const { username, email, password } = req.body;
 
+        // Validation des champs
+        if (!username || !email || !password) {
+            return res.status(400).json({ 
+                message: 'Tous les champs sont requis.' 
+            });
+        }
+
+        if (username.length < 3) {
+            return res.status(400).json({ 
+                message: 'Le nom d\'utilisateur doit contenir au moins 3 caractères.' 
+            });
+        }
+
+        if (password.length < 6) {
+            return res.status(400).json({ 
+                message: 'Le mot de passe doit contenir au moins 6 caractères.' 
+            });
+        }
+
         // Vérifier si l'utilisateur existe déjà
         const existingUser = await User.findOne({ $or: [{ email }, { username }] });
         if (existingUser) {
@@ -39,6 +58,20 @@ router.post('/register', async (req, res) => {
         });
     } catch (error) {
         console.error('Erreur inscription:', error);
+        
+        // Gestion des erreurs de validation MongoDB
+        if (error.name === 'ValidationError') {
+            const messages = Object.values(error.errors).map(err => err.message);
+            return res.status(400).json({ message: messages.join(', ') });
+        }
+        
+        // Erreur de duplication (code 11000)
+        if (error.code === 11000) {
+            return res.status(400).json({ 
+                message: 'Cet email ou nom d\'utilisateur est déjà utilisé.' 
+            });
+        }
+        
         res.status(500).json({ message: 'Erreur lors de l\'inscription.' });
     }
 });
@@ -48,8 +81,15 @@ router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        // Validation des champs
+        if (!email || !password) {
+            return res.status(400).json({ 
+                message: 'Email et mot de passe requis.' 
+            });
+        }
+
         // Trouver l'utilisateur
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email: email.toLowerCase().trim() });
         if (!user) {
             return res.status(401).json({ message: 'Email ou mot de passe incorrect.' });
         }

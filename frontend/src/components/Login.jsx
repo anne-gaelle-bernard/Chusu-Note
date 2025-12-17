@@ -32,6 +32,12 @@ function Login({ onLogin }) {
         body: JSON.stringify(formData)
       });
 
+      // Vérifier le type de contenu de la réponse
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Le serveur backend n\'est pas disponible. Vérifiez qu\'il est démarré sur le port 3000.');
+      }
+
       const data = await response.json();
 
       if (!response.ok) {
@@ -41,7 +47,11 @@ function Login({ onLogin }) {
       localStorage.setItem('token', data.token);
       onLogin();
     } catch (err) {
-      setError(err.message);
+      if (err.message.includes('Failed to fetch') || err.name === 'TypeError') {
+        setError('Impossible de se connecter au serveur. Assurez-vous que le backend est démarré.');
+      } else {
+        setError(err.message);
+      }
     } finally {
       setLoading(false);
     }

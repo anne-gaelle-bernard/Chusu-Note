@@ -19,13 +19,22 @@ async function connectToDatabase() {
     return cachedDb;
   }
 
-  const connection = await mongoose.connect(process.env.MONGODB_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  });
+  try {
+    if (!process.env.MONGODB_URI) {
+      throw new Error('MONGODB_URI non définie dans les variables d\'environnement');
+    }
 
-  cachedDb = connection;
-  return connection;
+    const connection = await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+    });
+
+    cachedDb = connection;
+    console.log('✅ Connecté à MongoDB');
+    return connection;
+  } catch (error) {
+    console.error('❌ Erreur de connexion MongoDB:', error.message);
+    throw error;
+  }
 }
 
 // Routes
@@ -53,8 +62,25 @@ app.get('/api', (req, res) => {
     });
 });
 
+// Gestion globale des erreurs
+app.use((err, req, res, next) => {
+  console.error('Erreur:', err);
+  res.status(500).json({ 
+    error: 'Erreur serveur',
+    message: err.message 
+  });
+});
+
 // Vercel serverless handler
 module.exports = async (req, res) => {
-  await connectToDatabase();
-  return app(req, res);
+  try {
+    await connectToDatabase();
+    return app(req, res);
+  } catch (error) {
+    console.error('Erreur handler:', error);
+    return res.status(500).json({ 
+      error: 'Erreur de connexion à la base de données',
+      message: error.message 
+    });
+  }
 };
