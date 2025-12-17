@@ -44,3 +44,4 @@ coverage
 .vscode/*
 !.vscode/extensions.json
 .idea
+.env*.local
