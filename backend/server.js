@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const MONGODB_URI = process.env.MONGODB_URI ||'mongodb://localhost:27017/Chusunote' 
 
 dotenv.config();
 
@@ -44,3 +45,8 @@ app.listen(PORT, () => {
     console.log(`🚀 Serveur démarré sur le port ${PORT}`);
     console.log(`📝 Ouvrir http://localhost:${PORT}`);
 });
+
+
+
+
+
