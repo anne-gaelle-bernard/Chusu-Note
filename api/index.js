@@ -2,6 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const MONGODB_URI = process.env.MONGODB_URI ||'mongodb://localhost:27017/Chusunote' 
+
 
 dotenv.config();
 

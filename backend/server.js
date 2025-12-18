@@ -2,8 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const MONGODB_URI = process.env.MONGODB_URI ||'mongodb://localhost:27017/Chusunote' 
 
+// Charger les variables d'environnement en premier
 dotenv.config();
 
 const app = express();
@@ -13,8 +13,9 @@ app.use(cors());
 app.use(express.json());
 
 // Connexion à MongoDB
-mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('✅ Connecté à MongoDB'))
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu-note';
+mongoose.connect(MONGODB_URI)
+    .then(() => console.log('✅ Connecté à MongoDB:', MONGODB_URI))
     .catch(err => console.error('❌ Erreur de connexion MongoDB:', err));
 
 // Routes

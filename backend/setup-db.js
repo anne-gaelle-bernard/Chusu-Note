@@ -13,9 +13,10 @@ const Reminder = require('./models/Reminder');
 
 async function setupDatabase() {
   try {
+    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu-note';
     console.log('🔌 Connexion à MongoDB...');
-    await mongoose.connect(process.env.MONGODB_URI);
-    console.log('✅ Connecté à MongoDB');
+    await mongoose.connect(MONGODB_URI);
+    console.log('✅ Connecté à MongoDB:', MONGODB_URI);
 
     // Créer les collections si elles n'existent pas
     const collections = await mongoose.connection.db.listCollections().toArray();
