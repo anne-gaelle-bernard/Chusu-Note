@@ -13,7 +13,7 @@ app.use(cors());
 app.use(express.json());
 
 // Connexion à MongoDB
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu-note';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu_note';
 mongoose.connect(MONGODB_URI)
     .then(() => console.log('✅ Connecté à MongoDB:', MONGODB_URI))
     .catch(err => console.error('❌ Erreur de connexion MongoDB:', err));

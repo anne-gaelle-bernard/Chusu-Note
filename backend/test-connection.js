@@ -4,7 +4,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu-note';
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu_note';
 
 console.log('🔌 Test de connexion à MongoDB...');
 console.log('📍 URI:', MONGODB_URI);

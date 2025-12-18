@@ -13,7 +13,7 @@ const Reminder = require('./models/Reminder');
 
 async function setupDatabase() {
   try {
-    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu-note';
+    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu_note';
     console.log('🔌 Connexion à MongoDB...');
     await mongoose.connect(MONGODB_URI);
     console.log('✅ Connecté à MongoDB:', MONGODB_URI);
