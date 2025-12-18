@@ -2,9 +2,8 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const MONGODB_URI = process.env.MONGODB_URI ||'mongodb://localhost:27017/Chusunote' 
 
-
+// Charger les variables d'environnement
 dotenv.config();
 
 const app = express();
@@ -22,16 +21,18 @@ async function connectToDatabase() {
   }
 
   try {
-    if (!process.env.MONGODB_URI) {
+    const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu_note';
+    
+    if (!MONGODB_URI) {
       throw new Error('MONGODB_URI non définie dans les variables d\'environnement');
     }
 
-    const connection = await mongoose.connect(process.env.MONGODB_URI, {
+    const connection = await mongoose.connect(MONGODB_URI, {
       serverSelectionTimeoutMS: 5000,
     });
 
     cachedDb = connection;
-    console.log('✅ Connecté à MongoDB');
+    console.log('✅ Connecté à MongoDB:', MONGODB_URI);
     return connection;
   } catch (error) {
     console.error('❌ Erreur de connexion MongoDB:', error.message);
