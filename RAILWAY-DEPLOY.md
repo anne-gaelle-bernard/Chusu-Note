@@ -1,6 +1,15 @@
 # 🚂 Railway Deployment Guide - CHUSU Note
 
-Complete guide to deploy your CHUSU Note application on Railway.
+## ⚠️ Quick Fix for Your Failed Deployment
+
+Your deployment likely failed because of missing configuration. I've added:
+- ✅ **railway.json** - Railway configuration
+- ✅ **nixpacks.toml** - Build instructions  
+- ✅ **Procfile** - Start command
+- ✅ **Updated server.js** - Production-ready with static file serving
+- ✅ **Updated package.json** - Railway build scripts
+
+---
 
 ## 📋 Prerequisites
 

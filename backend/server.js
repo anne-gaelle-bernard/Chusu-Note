@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
+const path = require('path');
 
 // Charger les variables d'environnement en premier
 dotenv.config();
@@ -9,8 +10,17 @@ dotenv.config();
 const app = express();
 
 // Middlewares
-app.use(cors());
+app.use(cors({
+    origin: process.env.FRONTEND_URL || '*',
+    credentials: true
+}));
 app.use(express.json());
+
+// Serve static files from frontend build (for Railway deployment)
+if (process.env.NODE_ENV === 'production') {
+    const frontendPath = path.join(__dirname, '../frontend/dist');
+    app.use(express.static(frontendPath));
+}
 
 // Connexion à MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu_note';
@@ -49,15 +59,24 @@ app.get('/api/health', (req, res) => {
         uptime: process.uptime(),
         status: 'OK',
         timestamp: Date.now(),
-        database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+        database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+        environment: process.env.NODE_ENV || 'development'
     };
     res.status(200).json(healthCheck);
 });
 
+// Serve frontend for all other routes in production
+if (process.env.NODE_ENV === 'production') {
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+    });
+}
+
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Serveur démarré sur le port ${PORT}`);
-    console.log(`📝 Ouvrir http://localhost:${PORT}`);
+    console.log(`📝 Environnement: ${process.env.NODE_ENV || 'development'}`);
+    console.log(`🌐 URL: http://localhost:${PORT}`);
 });
 
 

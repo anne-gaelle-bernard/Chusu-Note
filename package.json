@@ -10,7 +10,10 @@
     "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "build": "cd frontend && npm run build",
     "start:backend": "cd backend && npm start",
-    "vercel-build": "cd frontend && npm run build"
+    "vercel-build": "cd frontend && npm run build",
+    "railway:install": "cd backend && npm install",
+    "railway:build": "cd frontend && npm install && npm run build",
+    "railway:start": "cd backend && npm start"
   },
   "keywords": [
     "notes",
