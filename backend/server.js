@@ -36,9 +36,22 @@ app.get('/', (req, res) => {
         version: '1.0.0',
         endpoints: {
             auth: '/api/auth',
-            fruits: '/api/fruits'
+            fruits: '/api/fruits',
+            reminders: '/api/reminders',
+            notes: '/api/notes'
         }
     });
+});
+
+// Health check endpoint for Railway
+app.get('/api/health', (req, res) => {
+    const healthCheck = {
+        uptime: process.uptime(),
+        status: 'OK',
+        timestamp: Date.now(),
+        database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+    };
+    res.status(200).json(healthCheck);
 });
 
 const PORT = process.env.PORT || 3000;
