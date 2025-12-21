@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
+import PWAInstallPrompt from './components/PWAInstallPrompt';
+import PWAUpdateNotification from './components/PWAUpdateNotification';
 import './App.css';
 
 function App() {
@@ -42,6 +44,8 @@ function App() {
       ) : (
         <Dashboard onLogout={handleLogout} />
       )}
+      <PWAInstallPrompt />
+      <PWAUpdateNotification />
     </div>
   );
 }
