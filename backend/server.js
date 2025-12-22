@@ -24,9 +24,18 @@ if (process.env.NODE_ENV === 'production') {
 
 // Connexion à MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu_note';
-mongoose.connect(MONGODB_URI)
-    .then(() => console.log('✅ Connecté à MongoDB:', MONGODB_URI))
-    .catch(err => console.error('❌ Erreur de connexion MongoDB:', err));
+
+mongoose.connect(MONGODB_URI, {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+})
+    .then(() => {
+        console.log('✅ Connecté à MongoDB:', MONGODB_URI.replace(/\/\/([^:]+):([^@]+)@/, '//$1:****@'));
+    })
+    .catch(err => {
+        console.error('❌ Erreur de connexion MongoDB:', err.message);
+        console.error('⚠️  L\'application continuera sans base de données');
+    });
 
 // Routes
 const authRoutes = require('./routes/auth');
@@ -73,10 +82,43 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, '0.0.0.0', () => {
+const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Serveur démarré sur le port ${PORT}`);
     console.log(`📝 Environnement: ${process.env.NODE_ENV || 'development'}`);
     console.log(`🌐 URL: http://localhost:${PORT}`);
+});
+
+// Gérer les erreurs du serveur
+server.on('error', (error) => {
+    if (error.code === 'EADDRINUSE') {
+        console.error(`❌ Le port ${PORT} est déjà utilisé`);
+        process.exit(1);
+    } else {
+        console.error('❌ Erreur serveur:', error);
+    }
+});
+
+// Gérer l'arrêt gracieux
+process.on('SIGTERM', () => {
+    console.log('👋 SIGTERM reçu, arrêt gracieux...');
+    server.close(() => {
+        console.log('💤 Serveur fermé');
+        mongoose.connection.close(false, () => {
+            console.log('🔌 Connexion MongoDB fermée');
+            process.exit(0);
+        });
+    });
+});
+
+process.on('SIGINT', () => {
+    console.log('👋 SIGINT reçu, arrêt gracieux...');
+    server.close(() => {
+        console.log('💤 Serveur fermé');
+        mongoose.connection.close(false, () => {
+            console.log('🔌 Connexion MongoDB fermée');
+            process.exit(0);
+        });
+    });
 });
 
 
