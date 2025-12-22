@@ -17,9 +17,14 @@ app.use(cors({
 app.use(express.json());
 
 // Serve static files from frontend build (for Railway deployment)
-if (process.env.NODE_ENV === 'production') {
+// Force serving frontend in Railway environment
+const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT;
+if (isProduction) {
     const frontendPath = path.join(__dirname, '../frontend/dist');
+    console.log('📦 Serving static frontend from:', frontendPath);
     app.use(express.static(frontendPath));
+} else {
+    console.log('🔧 Mode développement - frontend non servi depuis Express');
 }
 
 // Connexion à MongoDB
@@ -75,9 +80,11 @@ app.get('/api', (req, res) => {
 });
 
 // Serve frontend for all other routes in production
-if (process.env.NODE_ENV === 'production') {
+if (isProduction) {
     app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+        const indexPath = path.join(__dirname, '../frontend/dist/index.html');
+        console.log('🌐 Serving index.html for:', req.url);
+        res.sendFile(indexPath);
     });
 }
 
