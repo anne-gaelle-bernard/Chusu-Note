@@ -1,0 +1,111 @@
+# Configuration MongoDB Atlas pour CHUSU Note
+# ID Projet: 69483f1f5fb9bd46c36fcad1
+
+# ========================================
+# INFORMATIONS DE CONNEXION ATLAS
+# ========================================
+
+Cluster: cluster0.xxxxx.mongodb.net
+Base de données: chusu_note
+Utilisateur: <votre_username>
+Mot de passe: <votre_password>
+
+# ========================================
+# CHAÎNE DE CONNEXION
+# ========================================
+
+Format standard:
+mongodb+srv://<username>:<password>@cluster0.xxxxx.mongodb.net/chusu_note?retryWrites=true&w=majority
+
+Exemple:
+mongodb+srv://chusu_admin:MonMotDePasse123@cluster0.abc123.mongodb.net/chusu_note?retryWrites=true&w=majority
+
+# ⚠️ Si votre mot de passe contient des caractères spéciaux, encodez-les:
+# @ → %40
+# : → %3A
+# / → %2F
+# ? → %3F
+# # → %23
+# [ → %5B
+# ] → %5D
+
+# ========================================
+# CONFIGURATION RÉSEAU
+# ========================================
+
+IP Autorisées (Network Access):
+- 0.0.0.0/0 (Accès depuis partout - pour développement)
+
+Pour production:
+- Limitez aux IPs spécifiques de Railway
+
+# ========================================
+# COLLECTIONS
+# ========================================
+
+Collections dans chusu_note:
+- users       (Utilisateurs de l'application)
+- fruits      (Données de fruits)
+- notes       (Notes des utilisateurs)
+- reminders   (Rappels)
+
+# ========================================
+# INDEXES RECOMMANDÉS
+# ========================================
+
+users:
+  - { email: 1 } - unique
+  - { username: 1 } - unique
+
+fruits:
+  - { userId: 1, createdAt: -1 }
+  - { name: 1 }
+
+notes:
+  - { userId: 1, createdAt: -1 }
+
+reminders:
+  - { userId: 1, date: 1 }
+  - { completed: 1, date: 1 }
+
+# ========================================
+# PARAMÈTRES RECOMMANDÉS
+# ========================================
+
+Tier: M0 (Free) - Suffisant pour démarrage
+Région: Choisissez la plus proche (ex: eu-west-1)
+MongoDB Version: 7.0 (dernière stable)
+
+# ========================================
+# BACKUP
+# ========================================
+
+Free Tier (M0):
+- Snapshots Cloud disponibles (limités)
+- Considérez des exports réguliers pour backup
+
+Commande export:
+mongodump --uri="mongodb+srv://user:pass@cluster.mongodb.net/chusu_note" --out=./backup
+
+# ========================================
+# MONITORING
+# ========================================
+
+Dans Atlas Dashboard:
+- Metrics: Surveillez les connexions et requêtes
+- Performance Advisor: Suggestions d'optimisation
+- Real-Time: Opérations en temps réel
+
+# ========================================
+# LIMITES FREE TIER (M0)
+# ========================================
+
+- Stockage: 512 MB
+- RAM: Partagée
+- Connexions simultanées: 500
+- Pas de backup automatique continu
+
+Suffisant pour:
+- Développement
+- Prototypes
+- Applications avec < 1000 utilisateurs
