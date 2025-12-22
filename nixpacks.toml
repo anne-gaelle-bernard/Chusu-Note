@@ -4,14 +4,14 @@ nixPkgs = ["nodejs-18_x"]
 
 [phases.install]
 cmds = [
-  "cd backend && npm ci --only=production",
-  "cd ../frontend && npm ci --include=dev",
+  "npm ci --prefix backend --only=production",
+  "npm ci --prefix frontend --include=dev",
 ]
 
 [phases.build]
 cmds = [
-  "cd frontend && npm run build",
+  "npm run build --prefix frontend",
 ]
 
 [start]
-cmd = "cd backend && node server.js"
+cmd = "node backend/server.js"
