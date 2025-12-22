@@ -24,18 +24,44 @@ function Login({ onLogin }) {
     setError('');
     setLoading(true);
 
+    // Validation côté client
+    if (isRegister && formData.username.trim().length < 3) {
+      setError('Le nom d\'utilisateur doit contenir au moins 3 caractères');
+      setLoading(false);
+      return;
+    }
+
+    if (formData.password.length < 6) {
+      setError('Le mot de passe doit contenir au moins 6 caractères');
+      setLoading(false);
+      return;
+    }
+
     try {
       const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
+      
+      // Préparer les données
+      const submitData = isRegister 
+        ? {
+            username: formData.username.trim(),
+            email: formData.email.trim().toLowerCase(),
+            password: formData.password
+          }
+        : {
+            email: formData.email.trim().toLowerCase(),
+            password: formData.password
+          };
+
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(submitData)
       });
 
       // Vérifier le type de contenu de la réponse
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Le serveur backend n\'est pas disponible. Vérifiez qu\'il est démarré sur le port 3000.');
+        throw new Error('Le serveur backend n\'est pas disponible. Vérifiez qu\'il est démarré.');
       }
 
       const data = await response.json();
@@ -44,11 +70,16 @@ function Login({ onLogin }) {
         throw new Error(data.message || 'Erreur de connexion');
       }
 
+      // Stockage du token et des infos utilisateur
       localStorage.setItem('token', data.token);
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+      }
+      
       onLogin();
     } catch (err) {
       if (err.message.includes('Failed to fetch') || err.name === 'TypeError') {
-        setError('Impossible de se connecter au serveur. Assurez-vous que le backend est démarré.');
+        setError('Impossible de se connecter au serveur. Vérifiez que le backend est démarré.');
       } else {
         setError(err.message);
       }

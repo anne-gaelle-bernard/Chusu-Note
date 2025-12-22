@@ -16,7 +16,7 @@ router.post('/register', async (req, res) => {
             });
         }
 
-        if (username.length < 3) {
+        if (username.trim().length < 3) {
             return res.status(400).json({ 
                 message: 'Le nom d\'utilisateur doit contenir au moins 3 caractères.' 
             });
@@ -28,16 +28,31 @@ router.post('/register', async (req, res) => {
             });
         }
 
-        // Vérifier si l'utilisateur existe déjà
-        const existingUser = await User.findOne({ $or: [{ email }, { username }] });
-        if (existingUser) {
+        // Validation email
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
             return res.status(400).json({ 
-                message: 'Cet email ou nom d\'utilisateur est déjà utilisé.' 
+                message: 'Email invalide.' 
             });
         }
 
+        // Vérifier si l'utilisateur existe déjà
+        const existingUser = await User.findOne({ 
+            $or: [{ email: email.toLowerCase().trim() }, { username: username.trim() }] 
+        });
+        if (existingUser) {
+            if (existingUser.email === email.toLowerCase().trim()) {
+                return res.status(400).json({ message: 'Cet email est déjà utilisé.' });
+            }
+            return res.status(400).json({ message: 'Ce nom d\'utilisateur est déjà utilisé.' });
+        }
+
         // Créer le nouvel utilisateur
-        const user = new User({ username, email, password });
+        const user = new User({ 
+            username: username.trim(), 
+            email: email.toLowerCase().trim(), 
+            password 
+        });
         await user.save();
 
         // Créer le token JWT
