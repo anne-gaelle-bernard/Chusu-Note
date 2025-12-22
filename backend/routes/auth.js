@@ -6,11 +6,15 @@ const authMiddleware = require('../middleware/auth');
 
 // Inscription
 router.post('/register', async (req, res) => {
+    console.log('📝 [REGISTER] Tentative d\'inscription:', { username: req.body.username, email: req.body.email });
+    console.log('🔐 [REGISTER] JWT_SECRET défini:', !!process.env.JWT_SECRET);
+    
     try {
         const { username, email, password } = req.body;
 
         // Validation des champs
         if (!username || !email || !password) {
+            console.log('❌ [REGISTER] Champs manquants');
             return res.status(400).json({ 
                 message: 'Tous les champs sont requis.' 
             });
@@ -72,32 +76,42 @@ router.post('/register', async (req, res) => {
             }
         });
     } catch (error) {
-        console.error('Erreur inscription:', error);
+        console.error('❌ [REGISTER] Erreur inscription:', error.message);
+        console.error('❌ [REGISTER] Stack:', error.stack);
         
         // Gestion des erreurs de validation MongoDB
         if (error.name === 'ValidationError') {
             const messages = Object.values(error.errors).map(err => err.message);
+            console.log('⚠️  [REGISTER] Erreur de validation:', messages);
             return res.status(400).json({ message: messages.join(', ') });
         }
         
         // Erreur de duplication (code 11000)
         if (error.code === 11000) {
+            console.log('⚠️  [REGISTER] Duplicate key');
             return res.status(400).json({ 
                 message: 'Cet email ou nom d\'utilisateur est déjà utilisé.' 
             });
         }
         
-        res.status(500).json({ message: 'Erreur lors de l\'inscription.' });
+        res.status(500).json({ 
+            message: 'Erreur lors de l\'inscription.',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 });
 
 // Connexion
 router.post('/login', async (req, res) => {
+    console.log('🔑 [LOGIN] Tentative de connexion:', { email: req.body.email });
+    console.log('🔐 [LOGIN] JWT_SECRET défini:', !!process.env.JWT_SECRET);
+    
     try {
         const { email, password } = req.body;
 
         // Validation des champs
         if (!email || !password) {
+            console.log('❌ [LOGIN] Champs manquants');
             return res.status(400).json({ 
                 message: 'Email et mot de passe requis.' 
             });
@@ -132,8 +146,12 @@ router.post('/login', async (req, res) => {
             }
         });
     } catch (error) {
-        console.error('Erreur connexion:', error);
-        res.status(500).json({ message: 'Erreur lors de la connexion.' });
+        console.error('❌ [LOGIN] Erreur connexion:', error.message);
+        console.error('❌ [LOGIN] Stack:', error.stack);
+        res.status(500).json({ 
+            message: 'Erreur lors de la connexion.',
+            error: process.env.NODE_ENV === 'development' ? error.message : undefined
+        });
     }
 });
 

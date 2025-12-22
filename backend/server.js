@@ -7,6 +7,18 @@ const path = require('path');
 // Charger les variables d'environnement en premier
 dotenv.config();
 
+// Vérification des variables critiques
+console.log('🔍 Vérification des variables d\'environnement...');
+console.log('   NODE_ENV:', process.env.NODE_ENV || 'non défini');
+console.log('   RAILWAY_ENVIRONMENT:', process.env.RAILWAY_ENVIRONMENT || 'non défini');
+console.log('   MONGODB_URI:', process.env.MONGODB_URI ? '✅ défini' : '❌ NON DÉFINI');
+console.log('   JWT_SECRET:', process.env.JWT_SECRET ? '✅ défini' : '❌ NON DÉFINI');
+
+if (!process.env.JWT_SECRET) {
+    console.error('❌ ERREUR CRITIQUE: JWT_SECRET n\'est pas défini!');
+    console.error('⚠️  L\'authentification ne fonctionnera pas.');
+}
+
 const app = express();
 
 // Middlewares
