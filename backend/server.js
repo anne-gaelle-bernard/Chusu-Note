@@ -99,25 +99,23 @@ server.on('error', (error) => {
 });
 
 // Gérer l'arrêt gracieux
-process.on('SIGTERM', () => {
+process.on('SIGTERM', async () => {
     console.log('👋 SIGTERM reçu, arrêt gracieux...');
-    server.close(() => {
+    server.close(async () => {
         console.log('💤 Serveur fermé');
-        mongoose.connection.close(false, () => {
-            console.log('🔌 Connexion MongoDB fermée');
-            process.exit(0);
-        });
+        await mongoose.connection.close();
+        console.log('🔌 Connexion MongoDB fermée');
+        process.exit(0);
     });
 });
 
-process.on('SIGINT', () => {
+process.on('SIGINT', async () => {
     console.log('👋 SIGINT reçu, arrêt gracieux...');
-    server.close(() => {
+    server.close(async () => {
         console.log('💤 Serveur fermé');
-        mongoose.connection.close(false, () => {
-            console.log('🔌 Connexion MongoDB fermée');
-            process.exit(0);
-        });
+        await mongoose.connection.close();
+        console.log('🔌 Connexion MongoDB fermée');
+        process.exit(0);
     });
 });
 
