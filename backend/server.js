@@ -48,20 +48,6 @@ app.use('/api/fruits', fruitRoutes);
 app.use('/api/reminders', reminderRoutes);
 app.use('/api/notes', noteRoutes);
 
-// Route de bienvenue
-app.get('/', (req, res) => {
-    res.json({ 
-        message: '🍊 Bienvenue sur l\'API CHUSU NOTE',
-        version: '1.0.0',
-        endpoints: {
-            auth: '/api/auth',
-            fruits: '/api/fruits',
-            reminders: '/api/reminders',
-            notes: '/api/notes'
-        }
-    });
-});
-
 // Health check endpoint for Railway
 app.get('/api/health', (req, res) => {
     const healthCheck = {
@@ -72,6 +58,20 @@ app.get('/api/health', (req, res) => {
         environment: process.env.NODE_ENV || 'development'
     };
     res.status(200).json(healthCheck);
+});
+
+// API info endpoint (only in development or when explicitly requested)
+app.get('/api', (req, res) => {
+    res.json({ 
+        message: '🍊 Bienvenue sur l\'API CHUSU NOTE',
+        version: '1.0.0',
+        endpoints: {
+            auth: '/api/auth',
+            fruits: '/api/fruits',
+            reminders: '/api/reminders',
+            notes: '/api/notes'
+        }
+    });
 });
 
 // Serve frontend for all other routes in production
