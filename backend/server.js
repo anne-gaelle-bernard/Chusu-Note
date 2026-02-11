@@ -64,6 +64,17 @@ mongoose.connect(MONGODB_URI, {
         console.error('⚠️  L\'application continuera sans base de données');
     });
 
+// Middleware de vérification de la base de données
+app.use((req, res, next) => {
+    if (mongoose.connection.readyState !== 1) {
+        return res.status(503).json({ 
+            message: 'Service temporairement indisponible. La base de données n\'est pas connectée.',
+            code: 'DB_DISCONNECTED'
+        });
+    }
+    next();
+});
+
 // Routes
 const authRoutes = require('./routes/auth');
 const fruitRoutes = require('./routes/fruits');
