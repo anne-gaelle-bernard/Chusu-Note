@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 import FruitForm from './FruitForm';
 import FruitList from './FruitList';
 import StatsModal from './StatsModal';
@@ -53,7 +54,7 @@ function Dashboard({ onLogout }) {
 
   const loadUser = async () => {
     try {
-      const response = await fetch('/api/auth/me', {
+      const response = await fetch(`${API_URL}/api/auth/me`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -73,7 +74,7 @@ function Dashboard({ onLogout }) {
 
   const loadFruits = async () => {
     try {
-      const response = await fetch('/api/fruits', {
+      const response = await fetch(`${API_URL}/api/fruits`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -91,7 +92,7 @@ function Dashboard({ onLogout }) {
 
   const checkUrgentReminders = async () => {
     try {
-      const response = await fetch('/api/reminders/urgent', {
+      const response = await fetch(`${API_URL}/api/reminders/urgent`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }

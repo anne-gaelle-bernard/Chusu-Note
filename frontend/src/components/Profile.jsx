@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 import '../styles/Profile.css';
 
 function Profile() {
@@ -20,7 +21,7 @@ function Profile() {
 
   const loadUserProfile = async () => {
     try {
-      const response = await fetch('/api/auth/me', {
+      const response = await fetch(`${API_URL}/api/auth/me`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -62,7 +63,7 @@ function Profile() {
         email: formData.email
       };
 
-      const response = await fetch('/api/auth/update', {
+      const response = await fetch(`${API_URL}/api/auth/update`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +99,7 @@ function Profile() {
     }
 
     try {
-      const response = await fetch('/api/auth/change-password', {
+      const response = await fetch(`${API_URL}/api/auth/change-password`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

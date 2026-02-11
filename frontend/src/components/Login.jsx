@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_URL } from '../config';
 import '../styles/Login.css';
 
 function Login({ onLogin }) {
@@ -38,7 +39,7 @@ function Login({ onLogin }) {
     }
 
     try {
-      const endpoint = isRegister ? '/api/auth/register' : '/api/auth/login';
+      const endpoint = isRegister ? `${API_URL}/api/auth/register` : `${API_URL}/api/auth/login`;
       
       // Préparer les données
       const submitData = isRegister 

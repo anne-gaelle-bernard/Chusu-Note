@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_URL } from '../config';
 import '../styles/FruitForm.css';
 
 function FruitForm({ onSuccess, editingFruit, onCancel }) {
@@ -64,8 +65,8 @@ function FruitForm({ onSuccess, editingFruit, onCancel }) {
 
     try {
       const url = editingFruit
-        ? `/api/fruits/${editingFruit._id}`
-        : '/api/fruits';
+        ? `${API_URL}/api/fruits/${editingFruit._id}`
+        : `${API_URL}/api/fruits`;
       
       const method = editingFruit ? 'PUT' : 'POST';
 

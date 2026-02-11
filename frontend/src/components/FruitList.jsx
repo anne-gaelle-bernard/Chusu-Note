@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_URL } from '../config';
 import FruitForm from './FruitForm';
 import '../styles/FruitList.css';
 
@@ -15,7 +16,7 @@ function FruitList({ fruits, onUpdate }) {
     if (!confirm('Supprimer ce fruit ?')) return;
 
     try {
-      const response = await fetch(`/api/fruits/${id}`, {
+      const response = await fetch(`${API_URL}/api/fruits/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

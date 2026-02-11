@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 import '../styles/Introspection.css';
 
 function Introspection() {
@@ -15,7 +16,7 @@ function Introspection() {
 
   const loadNotes = async () => {
     try {
-      const response = await fetch('/api/notes', {
+      const response = await fetch(`${API_URL}/api/notes`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -36,7 +37,7 @@ function Introspection() {
     }
 
     try {
-      const url = isEditing ? `/api/notes/${editingId}` : '/api/notes';
+      const url = isEditing ? `${API_URL}/api/notes/${editingId}` : `${API_URL}/api/notes`;
       const method = isEditing ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
@@ -62,7 +63,7 @@ function Introspection() {
     if (!confirm('Supprimer cette note ?')) return;
 
     try {
-      const response = await fetch(`/api/notes/${id}`, {
+      const response = await fetch(`${API_URL}/api/notes/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`

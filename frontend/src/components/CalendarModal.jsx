@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { API_URL } from '../config';
 import '../styles/CalendarModal.css';
 
 function CalendarModal({ fruits, onClose }) {
@@ -20,7 +21,7 @@ function CalendarModal({ fruits, onClose }) {
 
   const loadReminders = async () => {
     try {
-      const response = await fetch('/api/reminders', {
+      const response = await fetch(`${API_URL}/api/reminders`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
@@ -37,7 +38,7 @@ function CalendarModal({ fruits, onClose }) {
   const createReminder = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('/api/reminders', {
+      const response = await fetch(`${API_URL}/api/reminders`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -69,7 +70,7 @@ function CalendarModal({ fruits, onClose }) {
     if (!confirm('Supprimer ce rappel ?')) return;
     
     try {
-      const response = await fetch(`/api/reminders/${id}`, {
+      const response = await fetch(`${API_URL}/api/reminders/${id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -86,7 +87,7 @@ function CalendarModal({ fruits, onClose }) {
 
   const toggleReminderStatus = async (id, completed) => {
     try {
-      const response = await fetch(`/api/reminders/${id}`, {
+      const response = await fetch(`${API_URL}/api/reminders/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
