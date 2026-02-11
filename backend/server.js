@@ -21,9 +21,19 @@ if (!process.env.JWT_SECRET) {
 
 const app = express();
 
+// Sanitize FRONTEND_URL to avoid "Invalid character in header content"
+const getAllowedOrigins = () => {
+    const frontendUrl = process.env.FRONTEND_URL;
+    if (frontendUrl) {
+        // Split by comma if multiple origins are provided, and trim each
+        return frontendUrl.split(',').map(url => url.trim()).filter(url => url);
+    }
+    return '*';
+};
+
 // Middlewares
 app.use(cors({
-    origin: process.env.FRONTEND_URL || '*',
+    origin: getAllowedOrigins(),
     credentials: true
 }));
 app.use(express.json());
