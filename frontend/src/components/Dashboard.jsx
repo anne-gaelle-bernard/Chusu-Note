@@ -180,6 +180,31 @@ function Dashboard({ onLogout }) {
     link.click();
   };
 
+  const exportToPDF = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/fruits/export/pdf`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      });
+      
+      if (!response.ok) throw new Error('Erreur lors de l\'export PDF');
+      
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `chusu_fruits_${new Date().toISOString().split('T')[0]}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error('Erreur export PDF:', error);
+      alert('Erreur lors de l\'export PDF');
+    }
+  };
+
   const getPageTitle = () => {
     switch (activeSection) {
       case 'liste': return '📋 Liste des fruits';
@@ -340,8 +365,18 @@ function Dashboard({ onLogout }) {
             data-tooltip="Exporter CSV"
             title="Exporter CSV"
           >
-            <span className="nav-icon">📥</span>
+            <span className="nav-icon">�</span>
             {sidebarOpen && <span className="nav-text">Exporter CSV</span>}
+          </button>
+
+          <button 
+            className="nav-item"
+            onClick={() => { exportToPDF(); closeSidebar(); }}
+            data-tooltip="Exporter PDF"
+            title="Exporter PDF"
+          >
+            <span className="nav-icon">📄</span>
+            {sidebarOpen && <span className="nav-text">Exporter PDF</span>}
           </button>
 
           <button 
