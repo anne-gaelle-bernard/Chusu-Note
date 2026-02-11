@@ -30,13 +30,13 @@ app.use(express.json());
 
 // Serve static files from frontend build (for Railway deployment)
 // Force serving frontend in Railway environment
-const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT;
-if (isProduction) {
+const isProduction = process.env.NODE_ENV === 'production';
+if (isProduction && process.env.SERVE_FRONTEND === 'true') {
     const frontendPath = path.join(__dirname, '../frontend/dist');
     console.log('📦 Serving static frontend from:', frontendPath);
     app.use(express.static(frontendPath));
 } else {
-    console.log('🔧 Mode développement - frontend non servi depuis Express');
+    console.log('🔧 API Mode - Frontend hosted separately (Vercel)');
 }
 
 // Connexion à MongoDB
@@ -92,7 +92,7 @@ app.get('/api', (req, res) => {
 });
 
 // Serve frontend for all other routes in production
-if (isProduction) {
+if (isProduction && process.env.SERVE_FRONTEND === 'true') {
     app.get('*', (req, res) => {
         const indexPath = path.join(__dirname, '../frontend/dist/index.html');
         console.log('🌐 Serving index.html for:', req.url);
