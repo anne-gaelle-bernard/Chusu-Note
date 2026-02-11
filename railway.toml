@@ -1,3 +1,7 @@
+[build]
+builder = "NIXPACKS"
+buildCommand = "echo 'Skipping frontend build for backend deployment'"
+
 [deploy]
 healthcheckPath = "/api/health"
 healthcheckTimeout = 100
