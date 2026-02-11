@@ -1,0 +1,16 @@
+# Nixpacks configuration for Backend deployment
+[phases.setup]
+nixPkgs = ["nodejs-18_x"]
+
+[phases.install]
+# Install backend dependencies
+# We use 'npm install' instead of 'npm ci' to be more forgiving if lockfile is out of sync, 
+# but 'npm ci' is preferred for production if lockfile is perfect.
+cmds = ["cd backend && npm install"]
+
+[phases.build]
+# No build step for this backend
+cmds = []
+
+[start]
+cmd = "cd backend && npm start"

@@ -1,10 +1,4 @@
-[build]
-builder = "NIXPACKS"
-buildCommand = "cd backend && npm install"
-watchPatterns = ["backend/**", "package.json", "railway.toml"]
-
 [deploy]
-startCommand = "cd backend && npm start"
 healthcheckPath = "/api/health"
 healthcheckTimeout = 100
 restartPolicyType = "ON_FAILURE"
