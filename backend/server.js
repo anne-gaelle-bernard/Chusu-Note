@@ -110,6 +110,20 @@ if (isProduction && process.env.SERVE_FRONTEND === 'true') {
     });
 }
 
+// 404 Handler for API routes - Ensure JSON response
+app.use('/api/*', (req, res) => {
+    res.status(404).json({ message: 'Route API non trouvée.' });
+});
+
+// Global Error Handler - Ensure JSON response
+app.use((err, req, res, next) => {
+    console.error('❌ Global Error:', err);
+    res.status(500).json({ 
+        message: 'Erreur interne du serveur',
+        error: process.env.NODE_ENV === 'development' ? err.message : undefined
+    });
+});
+
 const PORT = process.env.PORT || 3000;
 const server = app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Serveur démarré sur le port ${PORT}`);

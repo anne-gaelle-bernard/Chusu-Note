@@ -62,7 +62,10 @@ function Login({ onLogin }) {
       // Vérifier le type de contenu de la réponse
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Le serveur backend n\'est pas disponible. Vérifiez qu\'il est démarré.');
+        // Log the actual response for debugging
+        const text = await response.text();
+        console.error('❌ Réponse non-JSON reçue:', text.substring(0, 200));
+        throw new Error(`Le serveur est inaccessible (${response.status} ${response.statusText}). Vérifiez la console.`);
       }
 
       const data = await response.json();
