@@ -99,18 +99,6 @@ app.use('/api/fruits', fruitRoutes);
 app.use('/api/reminders', reminderRoutes);
 app.use('/api/notes', noteRoutes);
 
-// Health check endpoint for Railway
-app.get('/api/health', (req, res) => {
-    const healthCheck = {
-        uptime: process.uptime(),
-        status: 'OK',
-        timestamp: Date.now(),
-        database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
-        environment: process.env.NODE_ENV || 'development'
-    };
-    res.status(200).json(healthCheck);
-});
-
 // API info endpoint (only in development or when explicitly requested)
 app.get('/api', (req, res) => {
     res.json({ 
