@@ -64,6 +64,19 @@ mongoose.connect(MONGODB_URI, {
         console.error('⚠️  L\'application continuera sans base de données');
     });
 
+// Health check endpoint for Railway (Moved before DB check to allow monitoring)
+app.get('/api/health', (req, res) => {
+    const healthCheck = {
+        uptime: process.uptime(),
+        status: 'OK',
+        timestamp: Date.now(),
+        database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+        environment: process.env.NODE_ENV || 'development'
+    };
+    // Return 200 even if DB is down, so Railway knows the container is running
+    res.status(200).json(healthCheck);
+});
+
 // Middleware de vérification de la base de données
 app.use((req, res, next) => {
     if (mongoose.connection.readyState !== 1) {
