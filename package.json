@@ -12,7 +12,7 @@
     "start:backend": "cd backend && npm start",
     "vercel-build": "cd frontend && npm run build",
     "railway:install": "cd backend && npm install",
-    "railway:build": "cd frontend && npm install && npm run build",
+    "railway:build": "echo 'No build step for backend'",
     "railway:start": "cd backend && npm start"
   },
   "keywords": [
