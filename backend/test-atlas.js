@@ -1,80 +1,42 @@
-const mongoose = require('mongoose');
-const dotenv = require('dotenv');
+const { MongoClient, ServerApiVersion } = require('mongodb');
+require('dotenv').config();
 
-dotenv.config();
+// Récupérer l'URI depuis les variables d'environnement ou utiliser celle par défaut
+// NOTE: Vous devez remplacer <db_password> par votre vrai mot de passe si vous modifiez ce fichier directement
+const uri = process.env.MONGODB_URI || "mongodb+srv://annegaellebernard_db_user:<db_password>@cluster0.af7jyxn.mongodb.net/?appName=Cluster0";
 
-const ATLAS_URI = process.env.MONGODB_URI_ATLAS || process.env.MONGODB_URI;
-
-console.log('🔍 Test de connexion à MongoDB Atlas\n');
-console.log('URI:', ATLAS_URI.replace(/\/\/([^:]+):([^@]+)@/, '//$1:****@'), '\n');
-
-async function testConnection() {
-    try {
-        console.log('📡 Connexion en cours...');
-        await mongoose.connect(ATLAS_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        });
-        
-        console.log('✅ Connexion réussie à MongoDB Atlas!\n');
-        
-        // Récupérer les informations du serveur
-        const admin = mongoose.connection.db.admin();
-        const serverInfo = await admin.serverInfo();
-        
-        console.log('📊 Informations du serveur:');
-        console.log(`   Version MongoDB: ${serverInfo.version}`);
-        console.log(`   Git Version: ${serverInfo.gitVersion}`);
-        console.log(`   Architecture: ${serverInfo.bits}-bit\n`);
-        
-        // Lister les bases de données
-        const dbAdmin = mongoose.connection.db.admin();
-        const dbs = await dbAdmin.listDatabases();
-        
-        console.log('💾 Bases de données:');
-        dbs.databases.forEach(db => {
-            const sizeMB = (db.sizeOnDisk / 1024 / 1024).toFixed(2);
-            console.log(`   - ${db.name} (${sizeMB} MB)`);
-        });
-        console.log('');
-        
-        // Lister les collections dans chusu_note
-        const collections = await mongoose.connection.db.listCollections().toArray();
-        
-        if (collections.length > 0) {
-            console.log('📚 Collections dans chusu_note:');
-            for (const collection of collections) {
-                const count = await mongoose.connection.db.collection(collection.name).countDocuments();
-                console.log(`   - ${collection.name}: ${count} documents`);
-            }
-        } else {
-            console.log('📚 Aucune collection trouvée dans chusu_note');
-            console.log('   (Normal si c\'est une nouvelle base)\n');
-        }
-        
-        console.log('\n✅ Test terminé avec succès!');
-        
-    } catch (error) {
-        console.error('\n❌ Erreur de connexion:');
-        console.error(`   ${error.message}\n`);
-        
-        if (error.message.includes('authentication')) {
-            console.log('💡 Vérifiez:');
-            console.log('   - Le nom d\'utilisateur et mot de passe');
-            console.log('   - Les caractères spéciaux sont encodés en URL');
-            console.log('   - L\'utilisateur existe dans Database Access\n');
-        } else if (error.message.includes('timeout') || error.message.includes('ECONNREFUSED')) {
-            console.log('💡 Vérifiez:');
-            console.log('   - Network Access dans Atlas (0.0.0.0/0)');
-            console.log('   - Votre connexion internet');
-            console.log('   - Le nom du cluster est correct\n');
-        }
-        
-        process.exit(1);
-    } finally {
-        await mongoose.connection.close();
-        console.log('🔌 Connexion fermée\n');
-    }
+// Vérification de sécurité pour le mot de passe
+if (uri.includes('<db_password>')) {
+    console.error("\n❌ ERREUR: Le mot de passe n'est pas défini !");
+    console.error("👉 Veuillez remplacer '<db_password>' par votre vrai mot de passe MongoDB.");
+    console.error("   Ou définissez la variable MONGODB_URI dans votre fichier .env\n");
+    process.exit(1);
 }
 
-testConnection();
+// Create a MongoClient with a MongoClientOptions object to set the Stable API version
+const client = new MongoClient(uri, {
+  serverApi: {
+    version: ServerApiVersion.v1,
+    strict: true,
+    deprecationErrors: true,
+  }
+});
+
+async function run() {
+  try {
+    console.log("🔌 Tentative de connexion à MongoDB Atlas...");
+    console.log(`📍 URI: ${uri.replace(/:([^:@]+)@/, ':****@')}`); // Masquer le mot de passe dans les logs
+    
+    // Connect the client to the server	(optional starting in v4.7)
+    await client.connect();
+    // Send a ping to confirm a successful connection
+    await client.db("admin").command({ ping: 1 });
+    console.log("✅ Pinged your deployment. You successfully connected to MongoDB!");
+  } catch (err) {
+      console.error("❌ Erreur de connexion:", err);
+  } finally {
+    // Ensures that the client will close when you finish/error
+    await client.close();
+  }
+}
+run().catch(console.dir);
