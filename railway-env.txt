@@ -1,0 +1,7 @@
+NODE_ENV=production
+
+MONGODB_URI=mongodb+srv://annegaellebernard_db_user:Mahlika%2E16@cluster0.af7jyxn.mongodb.net/Chusu_note?retryWrites=true&w=majority&appName=Cluster0
+
+JWT_SECRET=rySdLMbwnisAOm5BJPfCz6xlTFtW0IQ9uYoUcap2
+
+PORT=3000

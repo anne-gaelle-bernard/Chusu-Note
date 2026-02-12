@@ -1,0 +1,140 @@
+.pwa-update-notification {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  max-width: 90%;
+  width: 400px;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateX(-50%) translateY(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+  }
+}
+
+.pwa-update-content {
+  background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: white;
+}
+
+.pwa-update-icon {
+  font-size: 32px;
+  line-height: 1;
+  animation: rotate 2s linear infinite;
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.pwa-update-text {
+  flex: 1;
+}
+
+.pwa-update-text h3 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: white;
+}
+
+.pwa-update-text p {
+  margin: 0;
+  font-size: 13px;
+  opacity: 0.95;
+}
+
+.pwa-update-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pwa-update-btn {
+  background: white;
+  color: #4CAF50;
+  border: none;
+  padding: 8px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 14px;
+}
+
+.pwa-update-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.pwa-update-btn:active {
+  transform: scale(0.95);
+}
+
+.pwa-update-dismiss-btn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.pwa-update-dismiss-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: white;
+}
+
+@media (max-width: 480px) {
+  .pwa-update-notification {
+    top: 10px;
+    width: calc(100% - 20px);
+  }
+
+  .pwa-update-content {
+    padding: 12px 16px;
+  }
+
+  .pwa-update-icon {
+    font-size: 24px;
+  }
+
+  .pwa-update-text h3 {
+    font-size: 14px;
+  }
+
+  .pwa-update-text p {
+    font-size: 12px;
+  }
+
+  .pwa-update-btn {
+    padding: 6px 16px;
+    font-size: 13px;
+  }
+
+  .pwa-update-dismiss-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
