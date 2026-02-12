@@ -61,6 +61,11 @@ mongoose.connect(MONGODB_URI, {
     })
     .catch(err => {
         console.error('❌ Erreur de connexion MongoDB:', err.message);
+        if (err.message.includes('bad auth')) {
+            console.error('💡 Vérifiez votre nom d\'utilisateur et mot de passe dans MONGODB_URI');
+        } else if (err.message.includes('ECONNREFUSED') || err.message.includes('querySrv ETIMEOUT')) {
+            console.error('💡 Vérifiez que votre adresse IP est autorisée dans MongoDB Atlas (Network Access -> Allow Access from Anywhere)');
+        }
         console.error('⚠️  L\'application continuera sans base de données');
     });
 
