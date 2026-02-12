@@ -4,10 +4,10 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu_note';
+const MONGODB_URI = process.argv[2] || process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu_note';
 
 console.log('🔌 Test de connexion à MongoDB...');
-console.log('📍 URI:', MONGODB_URI);
+console.log('📍 URI:', MONGODB_URI.replace(/\/\/([^:]+):([^@]+)@/, '//$1:****@')); // Masquer le mot de passe dans les logs
 
 mongoose.connect(MONGODB_URI)
     .then(() => {
