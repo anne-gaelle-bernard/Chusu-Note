@@ -109,11 +109,13 @@ const authRoutes = require('./routes/auth');
 const fruitRoutes = require('./routes/fruits');
 const reminderRoutes = require('./routes/reminders');
 const noteRoutes = require('./routes/notes');
+const migrateRoutes = require('./routes/migrate');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/fruits', fruitRoutes);
 app.use('/api/reminders', reminderRoutes);
 app.use('/api/notes', noteRoutes);
+app.use('/api/migrate', migrateRoutes);
 
 // API info endpoint (only in development or when explicitly requested)
 app.get('/api', (req, res) => {
