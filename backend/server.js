@@ -51,6 +51,7 @@ if (isProduction && process.env.SERVE_FRONTEND === 'true') {
 
 // Connexion à MongoDB
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/chusu_note';
+let lastDbError = null;
 
 mongoose.connect(MONGODB_URI, {
     serverSelectionTimeoutMS: 5000,
@@ -58,8 +59,10 @@ mongoose.connect(MONGODB_URI, {
 })
     .then(() => {
         console.log('✅ Connecté à MongoDB:', MONGODB_URI.replace(/\/\/([^:]+):([^@]+)@/, '//$1:****@'));
+        lastDbError = null;
     })
     .catch(err => {
+        lastDbError = err.message;
         console.error('❌ Erreur de connexion MongoDB:', err.message);
         if (err.message.includes('bad auth')) {
             console.error('💡 Vérifiez votre nom d\'utilisateur et mot de passe dans MONGODB_URI');
@@ -76,6 +79,7 @@ app.get('/api/health', (req, res) => {
         status: 'OK',
         timestamp: Date.now(),
         database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+        dbError: lastDbError,
         environment: process.env.NODE_ENV || 'development'
     };
     // Return 200 even if DB is down, so Railway knows the container is running
@@ -87,7 +91,8 @@ app.use((req, res, next) => {
     if (mongoose.connection.readyState !== 1) {
         return res.status(503).json({ 
             message: 'Service temporairement indisponible. La base de données n\'est pas connectée.',
-            code: 'DB_DISCONNECTED'
+            code: 'DB_DISCONNECTED',
+            details: lastDbError // Expose error details to help debugging
         });
     }
     next();
